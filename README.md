@@ -1,5 +1,4 @@
-# projetWeb2_2023
-
+# projetGSK
 
 J'ai refactor dans ce dossier le petit projet GSK réalisé durant ma deuxième année d'apprentisage.
 
