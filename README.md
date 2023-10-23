@@ -5,7 +5,7 @@ J'ai refactor dans ce dossier le petit projet GSK réalisé durant ma deuxième 
 
 À noter les points suivant : 
 
-```
+```html
 <ul>
     <li>
         ça a été un projet réalisé avec des connaissances incomplètes (deuxième année).
