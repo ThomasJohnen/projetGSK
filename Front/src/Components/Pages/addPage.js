@@ -14,6 +14,10 @@ const pageAddForm = `
                             <label for="nomProduit" class="form-label">Nom du produit :</label>
                             <input type="text" class="form-control" id="nomProduit" name="nomProduit" required>
                         </div>
+                        <label for="category" class="form-label">Sélectionner la catégorie :</label>
+                        <select class="form-select" id="categorieProduit" name="categorieProduit" required>
+                            <!-- Ajoutez autant d'options que nécessaire pour vos catégories -->
+                        </select>
                         <div class="mb-3">
                             <label for="entreeProduit" class="form-label">Nombre de produit entrée :</label>
                             <input type="number" class="form-control" id="entreeProduit" name="entreeProduit" required>
@@ -36,18 +40,43 @@ const pageAddForm = `
     </div>`;
 
 
+    const getCategories = async () => {
+        const response = await fetch("/api/categories/");
+        if(!response.ok){
+            throw new Error("Impossible de récupérer les catégories");
+        };
+        const categories = await response.json();
+        return categories;
+
+    };
+
+    const renderCategories = async () => {
+        const categories = await getCategories();
+        const select = document.querySelector("#categorieProduit");
+        categories.forEach(category => {
+            const option = document.createElement("option");
+            option.value = category.id;
+            option.textContent = category.name;
+            select.appendChild(option);
+        });
+    };
+
+
     const AddPage = () => {
         clearPage();
         const main = document.querySelector('main')
         main.innerHTML = pageAddForm;
 
         const addForm = document.querySelector("#addForm");
+        renderCategories();
         addForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const nomProduit = document.querySelector("#nomProduit").value;
         const entreeProduit = document.querySelector("#entreeProduit").value;
         const sortieProduit = document.querySelector("#sortieProduit").value;
         const zoneProduit = document.querySelector("#zoneProduit").value;
+        const categorieProduit = document.querySelector("#categorieProduit").value;
+
 
         const option = {
             method: 'POST',
@@ -55,7 +84,9 @@ const pageAddForm = `
                 "nom": nomProduit, 
                 "entree": entreeProduit,
                 "sortie": sortieProduit,
-                "zone": zoneProduit
+                "zone": zoneProduit,
+                "category": categorieProduit
+                
             }),
             headers: {
                 'Content-Type': 'application/json'

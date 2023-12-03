@@ -11,7 +11,8 @@ Content-Type: application/json
     "nom": "Test",
     "entree": 4,
     "sortie": 3,
-    "zone": 1
+    "zone": 1,
+    "category": 1
 }
 
 
@@ -59,3 +60,6 @@ Content-Type: application/json
 
 ### get produit by id
 GET {{baseUrl}}/produits/3
+
+### get products by category
+GET {{baseUrl}}/produits/byCategory/1

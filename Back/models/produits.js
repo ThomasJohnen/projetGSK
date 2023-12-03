@@ -1,9 +1,12 @@
 const path = require('node:path');
 const { parse, serialize } = require("../utils/json");
 
-const filePath = path.join(__dirname, "/../data/produits.json");
+const {getCategoryById} = require("./categories");
 
+
+const filePath = path.join(__dirname, "/../data/produits.json");
 const PRODUITS = [];
+
 
 function getAllProduits(){
     const produits = parse(filePath, PRODUITS);
@@ -12,15 +15,20 @@ function getAllProduits(){
     return produits;
 };
 
-function createProduit(nom, entree, sortie, zone){
+function createProduit(nom, entree, sortie, zone, categoryProduit){
     const produits = parse(filePath, PRODUITS);
+    const category = getCategoryById(categoryProduit);
+    const categoryName = category.name;
+    const colorName = category.color;
     const id = produits.length + 1;
     const produit = {
-        id,
-        nom, 
-        entree, 
-        sortie,
-        zone,
+        "id": id,
+        "nom": nom, 
+        "entree": entree, 
+        "sortie": sortie,
+        "zone": zone,
+        "category": categoryName,
+        "color": colorName
     }
 
     produits.push(produit);
@@ -107,6 +115,12 @@ function getProduitById(id){
     return produit;
 };
 
+function getAllProductsOfCategory(categoryName){
+    const produits = parse(filePath, PRODUITS);
+    const produitsOfCategory = produits.filter(produit => produit.category === categoryName);
+    return produitsOfCategory;
+};
+
 module.exports = {
     getAllProduits,
     createProduit,
@@ -115,4 +129,5 @@ module.exports = {
     modifySortieProduit,
     modifyAllProduit,
     getProduitById,
+    getAllProductsOfCategory
 };

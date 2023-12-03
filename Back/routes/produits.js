@@ -1,5 +1,6 @@
 const express = require('express');
-const { getAllProduits, getProduitById, createProduit, deleteProduct, modifyEntreeProduit, modifySortieProduit, modifyAllProduit } = require('../models/produits');
+const { getAllProduits, getProduitById, createProduit, deleteProduct, modifyEntreeProduit, modifySortieProduit, modifyAllProduit, getAllProductsOfCategory } = require('../models/produits');
+const {ifCategoryExists, getCategoryById } = require('../models/categories');
 
 const router = express.Router();
 
@@ -34,10 +35,20 @@ router.post("/", (req, res) => {
     const entree = req?.body?.entree;
     const sortie = req?.body?.sortie;
     const zone = req?.body?.zone;
+    const category = req?.body?.category;
 
     const entreeInt = parseInt(entree, 10);
     const sortieInt = parseInt(sortie, 10);
     const zoneInt = parseInt(zone, 10);
+    const categoryInt = parseInt(category, 10);
+
+    if(category === null){
+        return res.sendStatus(400);
+    }
+
+    if(ifCategoryExists(categoryInt) === -1){
+        return res.sendStatus(404);
+    }
 
     if(nom === null){
         return res.sendStatus(400);
@@ -46,10 +57,9 @@ router.post("/", (req, res) => {
     if((entreeInt - sortieInt) !== zoneInt){
         return res.sendStatus(400);
     }
+ 
 
-
-
-    const produit = createProduit(nom, entreeInt, sortieInt, zoneInt);
+    const produit = createProduit(nom, entreeInt, sortieInt, zoneInt, categoryInt);
 
     return res.json(produit);
 
@@ -115,5 +125,30 @@ router.patch("/:id", (req, res) =>{
     return res.sendStatus(400)
         
      
+});
+
+router.get("/byCategory/:idCategory", (req, res) => {
+
+    const idCategory = req?.params?.idCategory;
+
+    if(idCategory === null || idCategory === undefined){
+        return res.status(400).json({ error: "Paramètre null" });
+    }
+
+    const idCategoryInt = parseInt(idCategory, 10);
+
+   
+
+    if(ifCategoryExists(idCategoryInt) === -1){
+        return res.status(404).json({ error: "Catégorie non trouvée" });
+    }
+
+    const category = getCategoryById(idCategoryInt);
+
+    const productOfCategory = getAllProductsOfCategory(category.name);
+
+
+
+    return res.json(productOfCategory);
 });
 module.exports = router;

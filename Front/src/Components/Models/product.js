@@ -1,7 +1,7 @@
 import minus from "../../assets/minus.svg";
 import plus from "../../assets/plus.svg";
 import edit from "../../assets/edit.svg";
-import Navigate from "../Router/Navigate";
+
 
 
 
@@ -19,12 +19,10 @@ async function displayProduit(){
     // on affiche les produits dans la page
     produits.forEach(produit => {
         const infoProduit = `
-            <div class="encart produit card col-md-3 col-sm-6 m-3 backgroundEncart text-white" id="${produit.id}">
+            <div style="background-color: ${produit.color}" class="encart produit card col-md-3 col-sm-6 m-3 backgroundEncart text-white" id="${produit.id}">
                 <div class="produitInfo card-body">
                     <h2 class="card-title">${produit.nom}</h2>
-                    <p class="card-text">quantité entrée : ${produit.entree}</br>
-                    quantité sortie : ${produit.sortie}</br>
-                    quantité en zone : ${produit.zone}</p>
+                    <p class="card-text">quantité en zone  : ${produit.zone}</br></p>
                     <a type="button" class="btModalPlus" data-bs-toggle="modal" data-bs-target="#modalProduit" data-id="${produit.id}">
                         <img src="${plus}">
                     </a>
@@ -81,7 +79,7 @@ async function displayProduit(){
 
                 const produitUpdated = await responseSubmitMinus.json();
 
-                Navigate('/');
+                window.location.reload();
                 return produitUpdated;
             });
         });
@@ -127,7 +125,8 @@ async function displayProduit(){
 
                 const produitUpdated = await responseSubmitPlus.json();
 
-                Navigate("/");
+        
+                window.location.reload();
                 return produitUpdated;
             });
 
@@ -184,7 +183,7 @@ async function displayProduit(){
 
                 const produitUpdated = await responseSubmitEdit.json();
 
-                Navigate("/");
+                window.location.reload();
                 return produitUpdated;
             });
         });
@@ -199,5 +198,6 @@ async function getProduitById(id){
     const produit = response.json();
     return produit;
 };
+
 
 export default displayProduit;
